@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<h1>Sistema de Reservación de Aulas</h1>
+
+{% if user.is_authenticated %}
+<p>Bienvenido, <strong>{{ user.username }}</strong></p>
+<p><a href="{% url 'reservar_aula' %}">Hacer una reserva</a></p>
+{% else %}
+<p><a href="{% url 'login' %}">Inicia sesión</a> o <a href="{% url 'register' %}">Regístrate</a> para hacer reservas.
+</p>
+{% endif %}
+
+<h2>Intecap CTO</h2>
+
+<h2>Aulas disponibles</h2>
+<ul>
+  {% for aula in aulas %}
+  <li>{{ aula.nombre }} - Capacidad: {{ aula.capacidad }} ({{ aula.ubicacion }})</li>
+  {% empty %}
+  <li>No hay aulas registradas.</li>
+  {% endfor %}
+</ul>
+
+<h2>Calendario de Reservas</h2>
+<div id="calendar"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'timeGridWeek',
+      locale: 'es',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'timeGridWeek,timeGridDay'
+      },
+      events: '/reservas-json/'
+    });
+    calendar.render();
+  });
+</script>
+{% endblock %}

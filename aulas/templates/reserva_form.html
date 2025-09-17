@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Nueva Reserva{% endblock %}
+
+{% block content %}
+  <div class="card" style="max-width:480px;">
+    <h2>Nueva Reserva de Aula</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+     
+     
+                {# Muestra errores globales del formulario #}
+                {% if form.non_field_errors %}
+                    <div class="error">
+                    {% for err in form.non_field_errors %}
+                        <p>{{ err }}</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+  
+      {% for field in form %}
+        <div style="margin-bottom:12px;">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="error">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div style="margin-top:16px;">
+        <button type="submit">Guardar Reserva</button>
+        <a href="{% url 'home' %}" style="margin-left:10px;">Cancelar</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
